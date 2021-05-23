@@ -11,10 +11,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Map;
 
 //controller中处理异常的基类代码，都放在这里
 //子类的controller继承就可以
 public class BaseController {
+
+
+    //声明一个需要的type类型
+    public static final String CONTENT_TYPE_FORMED= "application/x-www-form-urlencoded";
 
     //定义exceptionhandler解决未被controller层吸收的exception
     //所以要接收异常，正确的返回
@@ -24,7 +29,7 @@ public class BaseController {
     @ResponseBody
     public Object handlerException(HttpServletRequest request, Exception ex){
         //将要返回的东西先提取到键值对中
-        HashMap<String,Object> responseData = new HashMap<>();
+        Map<String,Object> responseData = new HashMap<>();
         //先要进行判断是否是BusinessException类型
         if (ex instanceof BusinessException){
             //将接收的异常前置的转换为BusinessException类型
