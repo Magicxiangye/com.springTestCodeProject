@@ -11,6 +11,7 @@ import com.miaosha.service.model.UserModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,9 +66,18 @@ public class UserServiceImpl implements UserService {
         //使用insertSelective的原因是，当输入的字段为null的时候，是不会去覆盖数据库里原有的默认值的
         UserDO userDO = convertFromModel(userModel);
         //映射给数据库
-        userDOMapper.insertSelective(userDO);
+        //注册过的手机号的唯一值报错catch
+        try{
+            userDOMapper.insertSelective(userDO);
+        }catch (DuplicateKeyException ex){
+            //unique的错误抛出
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号重复");
+        }
 
         //密码表的传递
+        //相关联的userid要获取
+        userModel.setId(userDO.getId());
+        //再传值
         UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
 

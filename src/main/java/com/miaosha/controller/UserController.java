@@ -14,13 +14,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /* 指定一个controller，名字为user*/
 //CrossOrigin,解决的是ajax跨域请求不安全的前端数据无法获得的错误
 @Controller("user")
 @RequestMapping("/user")
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class UserController extends BaseController{
     //调用一下用户的服务
     @Autowired
@@ -40,7 +43,7 @@ public class UserController extends BaseController{
                                      @RequestParam(name="name")String name,
                                      @RequestParam(name="gender")Integer gender,
                                      @RequestParam(name="age")Integer age,
-                                     @RequestParam(name="password")String password) throws BusinessException {
+                                     @RequestParam(name="password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         //第一步是验证手机号和相应的otp的code的符合性
         //从httpsession中将手机号和验证码取出配对
@@ -55,18 +58,31 @@ public class UserController extends BaseController{
         UserModel userModel = new UserModel();
         //设置值
         userModel.setName(name);
-        userModel.setGender(gender);
+        userModel.setGender(new Byte(String.valueOf(gender.intValue())));
         userModel.setAge(age);
         userModel.setTelephone(telphone);
         userModel.setRegisterMode("byphone");
         //MD5的数据加密的方式来存储用户的密码
-        userModel.setEncrptPassword(MD5Encoder.encode(password.getBytes()));
+        //MD5不能用，用自己的方法
+        userModel.setEncrptPassword(this.EncodeByMd5(password));
 
         userService.register(userModel);
 
         return CommonReturnType.create(null);
 
 
+    }
+
+    //密码的加密方法
+    public String EncodeByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        //确定计算的方法
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        //新包，代替的是BASE64Encoder
+        Base64.Encoder base64Encoder = Base64.getEncoder();
+        //加密的字符串
+        String newstr = base64Encoder.encodeToString(md5.digest(str.getBytes("utf-8")));
+
+        return newstr;
     }
 
 
