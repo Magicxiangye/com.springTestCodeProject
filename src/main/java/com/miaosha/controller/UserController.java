@@ -6,6 +6,7 @@ import com.miaosha.error.EmBusinessError;
 import com.miaosha.response.CommonReturnType;
 import com.miaosha.service.UserService;
 import com.miaosha.service.model.UserModel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,37 @@ public class UserController extends BaseController{
     @Autowired
     //bean找不到，不管了，傻逼springMVC
     private HttpServletRequest httpServletRequest;
+
+    //用户登入的接口
+    //接收的是用户的手机号以及密码的登录
+    @RequestMapping(value = "/login",method = {RequestMethod.POST},consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonReturnType login(@RequestParam(name="telphone")String telphone,
+                                  @RequestParam(name="password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        //首先，接收参数的校验
+        if(org.apache.commons.lang3.StringUtils.isEmpty(telphone)||
+                StringUtils.isEmpty(password)){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+
+        //验证通过，就是用户的登录服务
+        //校验用户的登录是否合法
+        //使用userservice的功能
+        //密码是加密后再传输道后面进行的判断
+        //返回相应的usermodel
+        UserModel userModel = userService.validateLogin(telphone,this.EncodeByMd5(password));
+
+        //没有异常的话，直接将登录的凭证加入到用户登录成功的session中，传输到后台
+        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
+        this.httpServletRequest.getSession().setAttribute("LOGIN_USER", userModel);
+
+        return CommonReturnType.create(null);
+
+
+
+    }
+
+
 
     //用户注册的接口
     //要用户的注册手机号，以及验证码

@@ -85,6 +85,36 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    //校验登录是否合法
+    @Override
+    public UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException {
+        //通过用户的手机号，获取它在数据库中的信息
+        //在userDOmapper.xml中先写SQL的方法
+        //再在相应mapper的接口中，定义这个方法
+        UserDO userDO = userDOMapper.selectByTelphone(telphone);
+        //判空的准备，查无此人
+        if(userDO == null){
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+        //是真实的存在的用户就拿到相对应的密码的do
+        UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
+        //组装为usermodel
+        UserModel userModel = convertFromDataObject(userDO,userPasswordDO);
+
+        //对比两个的密码是否是一样的，相匹配
+        //用户输入的密码在vo阶段，先进行加密，到这里直接的进行比较就可以
+        if(!StringUtils.equals(encrptPassword,userModel.getEncrptPassword())){
+            //不相等，throw
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+
+        //相等的话，直接return
+        return userModel;
+
+
+
+    }
+
     //还有一个密码do的转化方式
     private UserPasswordDO convertPasswordFromModel(UserModel userModel){
         if(userModel == null){
