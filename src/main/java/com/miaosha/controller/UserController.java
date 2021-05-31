@@ -90,7 +90,7 @@ public class UserController extends BaseController{
         UserModel userModel = new UserModel();
         //设置值
         userModel.setName(name);
-        userModel.setGender(new Byte(String.valueOf(gender.intValue())));
+        userModel.setGender(new Integer(String.valueOf(gender.intValue())));
         userModel.setAge(age);
         userModel.setTelephone(telphone);
         userModel.setRegisterMode("byphone");
