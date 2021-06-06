@@ -1,7 +1,11 @@
 package com.miaosha.dao;
 
 import com.miaosha.dataobject.ItemStockDO;
+import org.springframework.stereotype.Repository;
 
+
+/* 以免找不到接口看着难受*/
+@Repository
 public interface ItemStockDOMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +18,8 @@ public interface ItemStockDOMapper {
     int updateByPrimaryKeySelective(ItemStockDO record);
 
     int updateByPrimaryKey(ItemStockDO record);
+
+    //通过商品的id来查找库存
+
+    ItemStockDO selectByItemId(Integer itemId);
 }

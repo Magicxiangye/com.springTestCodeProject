@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.miaosha.dataobject.UserDO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="gender" jdbcType="TINYINT" property="gender" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
     <result column="age" jdbcType="INTEGER" property="age" />
     <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="register_mode" jdbcType="VARCHAR" property="registerMode" />
@@ -33,7 +33,7 @@
     insert into user_info (id, name, gender, 
       age, telephone, register_mode, 
       third_party_id)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER},
       #{age,jdbcType=INTEGER}, #{telephone,jdbcType=VARCHAR}, #{registerMode,jdbcType=VARCHAR}, 
       #{thirdPartyId,jdbcType=VARCHAR})
   </insert>
@@ -70,7 +70,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
+        #{gender,jdbcType=INTEGER},
       </if>
       <if test="age != null">
         #{age,jdbcType=INTEGER},
@@ -93,7 +93,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="gender != null">
-        gender = #{gender,jdbcType=TINYINT},
+        gender = #{gender,jdbcType=INTEGER},
       </if>
       <if test="age != null">
         age = #{age,jdbcType=INTEGER},
@@ -113,7 +113,7 @@
   <update id="updateByPrimaryKey" parameterType="com.miaosha.dataobject.UserDO">
     update user_info
     set name = #{name,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=TINYINT},
+      gender = #{gender,jdbcType=INTEGER},
       age = #{age,jdbcType=INTEGER},
       telephone = #{telephone,jdbcType=VARCHAR},
       register_mode = #{registerMode,jdbcType=VARCHAR},

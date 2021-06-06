@@ -1,7 +1,10 @@
 package com.miaosha.dao;
 
 import com.miaosha.dataobject.ItemDO;
+import org.springframework.stereotype.Repository;
 
+/* 以免找不到接口看着难受*/
+@Repository
 public interface ItemDOMapper {
     int deleteByPrimaryKey(Integer id);
 
