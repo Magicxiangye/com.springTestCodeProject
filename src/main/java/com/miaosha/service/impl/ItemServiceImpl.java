@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -98,9 +99,21 @@ public class ItemServiceImpl implements ItemService {
         return this.getItemById(itemModel.getId());
     }
 
+    //返回的是商品的列表
     @Override
     public List<ItemModel> listItem() {
-        return null;
+        //itemDOmapper得到的是itemDO对象
+        List<ItemDO> itemDOList = itemDOMapper.listItem();
+        //列表的转化方法
+       List<ItemModel> itemModelList = itemDOList.stream().map(itemDO -> {
+            //查询库存表中的库存
+            ItemStockDO itemStockDO = itemStockDOMapper.selectByItemId(itemDO.getId());
+            //转化为model类型
+            ItemModel itemModel = this.convertItemModelFromDataObject(itemDO,itemStockDO);
+            return itemModel;
+        }).collect(Collectors.toList());
+
+        return itemModelList;
     }
 
     @Override

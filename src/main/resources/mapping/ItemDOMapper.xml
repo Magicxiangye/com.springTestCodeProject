@@ -18,6 +18,12 @@
     from item
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <!--自定义的返回商品列表的数据库的查询-->
+  <select id="listItem" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from item order by sales DESC;
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from item
     where id = #{id,jdbcType=INTEGER}
