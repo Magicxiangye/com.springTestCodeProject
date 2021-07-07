@@ -9,7 +9,11 @@ public enum EmBusinessError implements CommonError{
     UNKNOWN_ERROR(10002, "未知错误"),
     //20000开头的就是用户信息的相关性错误，全局的错误码生成
     USER_NOT_EXIST(20001, "用户不存在"),
-    USER_LOGIN_FAIL(20002,"用户手机号或密码不正确")
+    USER_LOGIN_FAIL(20002,"用户手机号或密码不正确"),
+
+
+    //30000开头为交易信息的错误
+    STOCK_NOT_ENOUGH(30001, "库存不足")
     ;
     //;这个号上边定义的是枚举类的相应的错误的定义代码，当符合类型的时候
     //就会返回相应的错误码

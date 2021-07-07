@@ -134,6 +134,22 @@ public class ItemServiceImpl implements ItemService {
         return itemModel;
     }
 
+    @Override
+    //事务的一致性
+    @Transactional
+    public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
+
+        int affectRow = itemStockDOMapper.decreaseStock(itemId, amount);
+
+        //affectRow返回不为零的话说明更新成功
+        if(affectRow > 0 ){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     //反向的转化
     //dataObject-->转化为model
 

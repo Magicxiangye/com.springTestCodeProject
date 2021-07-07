@@ -1,7 +1,10 @@
 package com.miaosha.dao;
 
 import com.miaosha.dataobject.OrderDO;
+import org.springframework.stereotype.Repository;
 
+/* 以免找不到接口看着难受*/
+@Repository
 public interface OrderDOMapper {
     int deleteByPrimaryKey(String id);
 

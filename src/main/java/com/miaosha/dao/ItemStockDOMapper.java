@@ -1,6 +1,7 @@
 package com.miaosha.dao;
 
 import com.miaosha.dataobject.ItemStockDO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -22,4 +23,6 @@ public interface ItemStockDOMapper {
     //通过商品的id来查找库存
 
     ItemStockDO selectByItemId(Integer itemId);
+
+    int decreaseStock(@Param("itemId") Integer itemId, @Param("amount") Integer amount);
 }
